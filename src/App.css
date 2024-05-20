@@ -36,3 +36,6 @@
     transform: rotate(360deg);
   }
 }
+.hover-shadow:hover {
+  box-shadow: 0 4px 6px rgba(0, 0.7, 0, 0.1), 0 1px 3px rgba(0, 0.8, 0, 0.08);
+}

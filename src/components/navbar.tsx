@@ -1,6 +1,10 @@
 import React from 'react';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onSignupClick: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
   return (
     <nav>
       <div className="fixed top-0 left-0 right-0 z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,9 +19,12 @@ const Navbar: React.FC = () => {
             <a href="/login" className="text-white hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
               Login
             </a>
-            <a href="/signup" className="ml-4 text-white bg-blue-500 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
+            <button
+              onClick={onSignupClick}
+              className="ml-4 text-white bg-blue-500 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+            >
               Signup
-            </a>
+            </button>
           </div>
         </div>
       </div>

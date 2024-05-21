@@ -1,17 +1,21 @@
 
-import React, { useState } from 'react';
-import { FcGoogle } from "react-icons/fc";
-import { FaApple } from "react-icons/fa";
-import { MdOutlineEmail } from "react-icons/md";
-import user from "../assets/pic/user.png"
+import { useNavigate } from 'react-router-dom';
 
 
-const SignupPopup = () => {
+const SignupPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    onClose();
+    navigate('/');
+  };
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
             <div className="relative bg-white p-8 rounded-lg shadow-lg w-96">
                 <button
-                    // onClick={onClose}
+                    onClick={handleClose}
                     className="absolute top-4 right-4 text-gray-700 hover:text-gray-900"
                 >
                     &times;
@@ -75,7 +79,7 @@ const SignupPopup = () => {
                     </div>
                   </form>
                 </div>
-                <a href='' className='text-sm mt-4 text-center font-medium flex items-center   justify-center'>Already Sign-up? <span className='ml-2 text-cyan-500	'>Sign-In</span></a>
+                <a href='/' className='text-sm mt-4 text-center font-medium flex items-center   justify-center'>Already Sign-up? <span className='ml-2 text-cyan-500	'>Sign-In</span></a>
                
             </div>
         </div>

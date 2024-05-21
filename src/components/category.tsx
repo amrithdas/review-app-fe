@@ -10,12 +10,6 @@ import { FaCarAlt } from "react-icons/fa";
 import { IoHome } from "react-icons/io5";
 import { BsThreeDots } from "react-icons/bs";
 
-
-
-
-
-
-
 const category = [
     { title: "Restaurant", icon:<IoRestaurantSharp style={{fontSize:28}}/>  },
     { title: "Shopping", icon:<FaShopify style={{fontSize:28}}/>  },

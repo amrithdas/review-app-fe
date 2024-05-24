@@ -2,6 +2,7 @@ import React from 'react';
 
 interface NavbarProps {
   onSignupClick: () => void;
+  
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
@@ -16,12 +17,12 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick }) => {
           <a href="/signup" className="text-white text-sm mr-4">
               Write a Review
             </a>
-            <a href="/login" className="text-white hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            <a href="/login" className="text-white hover:bg-white hover:text-black px-4 py-2 border-solid border-2 border-white rounded-md text-sm font-medium">
               Login
             </a>
             <button
               onClick={onSignupClick}
-              className="ml-4 text-white bg-blue-500 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+              className="ml-4 text-white bg-blue-500 hover:bg-blue-700 px-3 py-2  rounded-md text-sm font-medium"
             >
               Signup
             </button>

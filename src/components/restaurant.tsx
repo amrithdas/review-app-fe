@@ -8,10 +8,6 @@ import { FaRegStar } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 
-
-
-
-
 const Restaurant: React.FC = () => {
     return (
         <>

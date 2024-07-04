@@ -8,6 +8,7 @@ import Footer from './components/footer';
 import SignupMini from './components/signUpMini';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Restaurant from './components/restaurant';
+import WriteaReview from './components/writeaReview';
 
 const Home: React.FC = () => {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
@@ -43,7 +44,7 @@ const App: React.FC = () => {
     <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/restaurant" element={<Restaurant />} />
+          <Route path="/WriteaReview" element={<WriteaReview />} />
         </Routes>
     </Router>
   );

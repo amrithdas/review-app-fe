@@ -1,11 +1,11 @@
 import React from "react";
 import { useState } from "react";
 const RestaurantSideBar: React.FC = () => {
-    const [priceRange, setPriceRange] = useState([0, 1000]);
+    // const [priceRange, setPriceRange] = useState([0, 1000]);
 //   const [selectedCategories, setSelectedCategories] = useState([]);
   const [distance, setDistance] = useState(0);
 
-  const categories = ['Arcades', 'Pasta', 'Kids Activities'];
+  const categories = ['Vegetarian', 'Chinese', 'South Indian', 'North Indian'];
 
 //   const handleCategoryChange = (category) => {
 //     setSelectedCategories((prev) =>
@@ -19,7 +19,7 @@ const RestaurantSideBar: React.FC = () => {
     <div className="w-64 p-4 ">
       <h2 className="text-lg font-bold mb-4">Filters</h2>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <h3 className="font-medium mb-2">Price Range</h3>
         <input
           type="range"
@@ -41,7 +41,7 @@ const RestaurantSideBar: React.FC = () => {
           <span>${priceRange[0]}</span>
           <span>${priceRange[1]}</span>
         </div>
-      </div>
+      </div> */}
 
       <div className="mb-4">
         <h3 className="font-medium mb-2">Categories</h3>

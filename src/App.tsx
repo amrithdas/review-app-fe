@@ -35,7 +35,8 @@ const Home: React.FC = () => {
   return (
     <div>
         <Navbar onSignupClick={handleSignupOpen}
-        onLoginClick={handleLoginOpen}/>
+        onLoginClick={handleLoginOpen}
+        isFixed={false}/>
         <Carousel />
         <div className="container mx-auto px-4">
           <RecentActivity />

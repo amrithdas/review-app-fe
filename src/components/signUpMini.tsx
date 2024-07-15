@@ -6,8 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SignupPopup from "./signUpPopUp";
 
+interface SignupMiniProps {
+    onClose: () => void;
+    onLoginOpen: () => void;
+}
 
-const SignupMini: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const SignupMini: React.FC<SignupMiniProps> = ({ onClose, onLoginOpen}) => {
     const [showEmailPopup, setShowEmailPopup] = useState(false);
     const navigate = useNavigate();
   
@@ -18,11 +22,16 @@ const SignupMini: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     const handleEmailClick = () => {
         setShowEmailPopup(true);
+    };
+
+    const handleLoginClick = () => {
+        onClose();
+        onLoginOpen();
       };
 
-      if (showEmailPopup) {
-        return <SignupPopup onClose={onClose} />;
-      }
+    if (showEmailPopup) {
+      return <SignupPopup onClose={onClose} onLoginOpen={handleLoginClick}/>;
+    }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
@@ -63,7 +72,7 @@ const SignupMini: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     </button>
 
                 </div>
-                <a href='/' className='text-sm mt-4 text-center font-medium flex items-center   justify-center'>Already on piktio? <span className='ml-2 text-cyan-500	'>Log in</span></a>
+                <p className='text-sm mt-4 text-center font-medium flex items-center   justify-center'>Already on piktio? <span className='ml-2 text-cyan-500	'><button onClick={handleLoginClick}>Log in</button></span></p>
                
             </div>
         </div>

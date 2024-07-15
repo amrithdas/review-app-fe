@@ -8,22 +8,35 @@ import Footer from './components/footer';
 import SignupMini from './components/signUpMini';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Restaurant from './components/restaurant';
+import Login from './components/login';
 import WriteaReview from './components/writeaReview';
 
 const Home: React.FC = () => {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const handleSignupOpen = () => {
     setIsSignupOpen(true);
+    setIsLoginOpen(false);
   };
 
   const handleSignupClose = () => {
     setIsSignupOpen(false);
   };
+
+  const handleLoginOpen = () => {
+    setIsLoginOpen(true);
+    setIsSignupOpen(false);
+  };
+
+  const handleLoginClose = () => {
+    setIsLoginOpen(false);
+  };
   
   return (
     <div>
-        <Navbar onSignupClick={handleSignupOpen} />
+        <Navbar onSignupClick={handleSignupOpen}
+        onLoginClick={handleLoginOpen}/>
         <Carousel />
         <div className="container mx-auto px-4">
           <RecentActivity />
@@ -34,7 +47,8 @@ const Home: React.FC = () => {
         <div className=" mx-auto b-0 mt-16">
           <Footer />
         </div>
-        {isSignupOpen && <SignupMini onClose={handleSignupClose} />}
+        {isSignupOpen && <SignupMini onClose={handleSignupClose} onLoginOpen={handleLoginOpen}/>}
+        {isLoginOpen && <Login onClose={handleLoginClose} onSignupOpen={handleSignupOpen}/>}
       </div>
   )
 }

@@ -7,9 +7,11 @@ import Category from './components/category';
 import Footer from './components/footer';
 import SignupMini from './components/signUpMini';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Restaurant from './components/restaurant';
+// import Restaurant from './components/restaurant';
 import Login from './components/login';
 import WriteaReview from './components/writeaReview';
+import WriteaReviewSearch from './components/writeaReviewSearch';
+
 
 const Home: React.FC = () => {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
@@ -59,6 +61,9 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/WriteaReview" element={<WriteaReview />} />
+          <Route path="/WriteaReviewSearch" element={<WriteaReviewSearch/>} />
+
+
         </Routes>
     </Router>
   );

@@ -6,12 +6,13 @@ import Cookies from 'js-cookie';
 interface NavbarProps {
   onSignupClick: () => void;
   onLoginClick: () => void;
+  isFixed: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick }) => {
+const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick, isFixed }) => {
 
   const isAuthenticated = useAuth();
-  console.log(isAuthenticated)
+  // console.log(isAuthenticated)
 
   const handleLogout = async () => {
     try {
@@ -38,19 +39,19 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick }) => {
 
   return (
     <nav>
-      <div className="fixed top-0 left-0 right-0 z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={isFixed?"fixed top-0 left-0 right-0 z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8 bg-white border-b-2 border-gray-300 h-16" : "relative top-0 left-0 right-0 z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300 bg-transparent h-16"}>
         <div className="flex justify-between h-16">
-          <div className="text-white flex-shrink-0 flex items-center">
+          <div className="text-black flex-shrink-0 flex items-center">
             <h2>placeholder</h2>
           </div>
           <div className="flex items-center">
-          <a href="/signup" className="text-white text-sm mr-4">
+          <a href="/signup" className="text-black text-sm mr-4">
               Write a Review
             </a>
             {!isAuthenticated?
             <><button
                 onClick={onLoginClick}
-                className="text-white hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                className="text-black border-solid border-2 border-black-600 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Login
               </button><button

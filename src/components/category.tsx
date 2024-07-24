@@ -2,23 +2,23 @@
 import React from 'react';
 import CategoryBox from './categorybox';
 import { IoRestaurantSharp } from "react-icons/io5";
-import { FaShopify } from "react-icons/fa";
-import { MdNightlife } from "react-icons/md";
-import { GiArcheryTarget } from "react-icons/gi";
-import { FaSpa } from "react-icons/fa";
-import { FaCarAlt } from "react-icons/fa";
-import { IoHome } from "react-icons/io5";
+// import { FaShopify } from "react-icons/fa";
+// import { MdNightlife } from "react-icons/md";
+// import { GiArcheryTarget } from "react-icons/gi";
+// import { FaSpa } from "react-icons/fa";
+// import { FaCarAlt } from "react-icons/fa";
+// import { IoHome } from "react-icons/io5";
 import { BsThreeDots } from "react-icons/bs";
 
 const category = [
     { title: "Restaurant", icon:<IoRestaurantSharp style={{fontSize:28}}/>  },
-    { title: "Shopping", icon:<FaShopify style={{fontSize:28}}/>  },
-    { title: "Nightlife", icon:  <MdNightlife style={{fontSize:28}}/>},
-    { title: "Active Life", icon: <GiArcheryTarget style={{fontSize:28}} /> },
-    { title: "Beauty & Spa", icon:<FaSpa style={{fontSize:28}} />},
-    { title: "Automotive", icon:<FaCarAlt style={{fontSize:28}} /> },
-    { title: "Home Service", icon: <IoHome style={{fontSize:28}}/> },
-    { title: "More", icon: <BsThreeDots style={{fontSize:28}}/>  },
+    // { title: "Shopping", icon:<FaShopify style={{fontSize:28}}/>  },
+    // { title: "Nightlife", icon:  <MdNightlife style={{fontSize:28}}/>},
+    // { title: "Active Life", icon: <GiArcheryTarget style={{fontSize:28}} /> },
+    // { title: "Beauty & Spa", icon:<FaSpa style={{fontSize:28}} />},
+    // { title: "Automotive", icon:<FaCarAlt style={{fontSize:28}} /> },
+    // { title: "Home Service", icon: <IoHome style={{fontSize:28}}/> },
+    { title: "More Coming Soon", icon: <BsThreeDots style={{fontSize:28}}/>  },
   ];
 
 const Category: React.FC = () => {

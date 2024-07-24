@@ -2,11 +2,18 @@ import React from 'react'
 import SearchBar from './searchBar';
 import reviewImage from '../assets/pic/review.svg'
 import thumbsUpImage from '../assets/pic/review1.svg'
+import Navbar from './navbar';
+import Footer from './footer';
+import { useAuth } from '../modals/authContext';
+import LoginModalManager from '../modals/loginModalManager';
 
-function writeaReview() {
+const ReviewLanding: React.FC = () => {
+  const { handleSignupOpen, handleLoginOpen} = useAuth();
+  
   return (
 
-    <div className='bg-gray-100 h-screen'>
+    <div className='bg-white-100 h-screen'>
+      <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={false} />
       <div className="flex pt-32 justify-center  ">
         <div className="flex flex-col ">
           <h1 className="text-3xl font-bold">Find a business to review</h1>
@@ -32,10 +39,14 @@ function writeaReview() {
         </div>
        
       </div>
+      <div className='mt-24'>
+        <Footer/>
+      </div>
+      <LoginModalManager />
     </div>
 
 
   );
 }
 
-export default writeaReview;
+export default ReviewLanding;

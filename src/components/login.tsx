@@ -1,7 +1,7 @@
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import user from "../assets/pic/user.png"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -16,11 +16,12 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const location = useLocation();
     const navigate = useNavigate();
 
     const handleClose = () => {
         onClose();
-        navigate('/');
+        navigate(location.pathname);
     };
 
     const handleSignupClick = () => {

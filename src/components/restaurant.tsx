@@ -9,6 +9,8 @@ import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/ap
 import RestaurantSideBar from "./restaurantSideBar";
 import Footer from "./footer";
 import Navbar from "./navbar";
+import { useAuth } from "../modals/authContext";
+import LoginModalManager from "../modals/loginModalManager";
 
 interface RestaurantData {
     name: string;
@@ -27,6 +29,8 @@ interface RestaurantData {
 }
 
 const Restaurant: React.FC = () => {
+
+    const { handleSignupOpen, handleLoginOpen} = useAuth();
 
     // function formatTime(dateTime: string) {
     //     const time = dateTime.split(' ')[1]; // Extract the time part
@@ -68,12 +72,7 @@ const Restaurant: React.FC = () => {
 
     return (
         <>
-            <Navbar onSignupClick={() => {
-                    // Implement this function
-                }} 
-                onLoginClick={() => {
-                    // Implement this function
-                }} isFixed={true}/>
+            <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={true} />
             <div className="flex gap-2 mb-6 mt-16">
                 <div className="w-1/5  p-4 text-black">
                     <RestaurantSideBar />
@@ -205,6 +204,7 @@ const Restaurant: React.FC = () => {
                 </div>
             </div>
             <Footer/>
+            <LoginModalManager />
         </>
     )
 }

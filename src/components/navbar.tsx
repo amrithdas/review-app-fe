@@ -42,10 +42,10 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick, isFixed })
       <div className={isFixed?"fixed top-0 left-0 right-0 z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8 bg-white border-b-2 border-gray-300 h-16" : "relative top-0 left-0 right-0 z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300 bg-transparent h-16"}>
         <div className="flex justify-between h-16">
           <div className="text-black flex-shrink-0 flex items-center">
-            <h2>placeholder</h2>
+            <h2><a href='/'>Piktio</a></h2>
           </div>
           <div className="flex items-center">
-          <a href="/signup" className="text-black text-sm mr-4">
+          <a href="/WriteaReview" className="text-black text-sm mr-4">
               Write a Review
             </a>
             {!isAuthenticated?

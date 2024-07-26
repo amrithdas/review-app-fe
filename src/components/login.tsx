@@ -39,7 +39,7 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
                 'X-CSRFToken': Cookies.get('csrftoken')
             };
 
-            const response = await axios.post('http://127.0.0.1:8000/accounts/login/', {
+            const response = await axios.post('http://34.100.209.240:8000/accounts/login/', {
                 email,
                 password
             }, {

@@ -48,7 +48,7 @@ const Restaurant: React.FC = () => {
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:8000/restaurants/api/get-restaurants/');
+                const response = await fetch('http://34.100.209.240:8000/restaurants/api/get-restaurants/');
                 const data = await response.json();
                 console.log(data);
                 setRestaurantData(data.restaurants);

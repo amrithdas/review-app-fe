@@ -21,7 +21,10 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick, isFixed })
         'X-CSRFToken': Cookies.get('csrftoken')
       };
 
-      const response = await axios.post('http://34.100.209.240:8000/accounts/logout/', {}, {
+      const baseURL = process.env.NODE_ENV === 'production'
+                    ? process.env.REACT_APP_PROD_ENDPOINT
+                    : process.env.REACT_APP_DEV_ENDPOINT;
+      const response = await axios.post(`${baseURL}accounts/logout/`, {}, {
           headers: headers,
           withCredentials: true  // Ensure credentials are included
       });

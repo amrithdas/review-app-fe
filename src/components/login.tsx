@@ -6,6 +6,8 @@ import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import CSRFToken from "./CSRFToken";
+import baseURL from '../config';
+import ErrorMessage from "./errorPopup";
 
 interface LoginProps {
     onClose: () => void;
@@ -38,10 +40,6 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': Cookies.get('csrftoken')
             };
-
-            const baseURL = process.env.NODE_ENV === 'production'
-                    ? process.env.REACT_APP_PROD_ENDPOINT
-                    : process.env.REACT_APP_DEV_ENDPOINT;
             const response = await axios.post(`${baseURL}accounts/login/`, {
                 email,
                 password
@@ -70,7 +68,7 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
     
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40">
             <div className="relative bg-white p-8 rounded-lg shadow-lg w-96">
                 <button
                     onClick={handleClose}
@@ -127,7 +125,7 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
                                 required
                             />
                         </div>
-                        {error && <p className="text-red-500 text-xs italic">{error}</p>}
+                        {error && <ErrorMessage message={error} onClose={() => setError('')} />}
                         <div className="flex items-center justify-center">
                             <button
                                 className="flex w-full justify-center bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline"

@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
+import baseURL from '../config';
 import axios from "axios";
 
-const useAuth = () => {
+const UserAuth = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                    const baseURL = process.env.NODE_ENV === 'production'
-                    ? process.env.REACT_APP_PROD_ENDPOINT
-                    : process.env.REACT_APP_DEV_ENDPOINT;
-
                     const response = await axios.get(`${baseURL}accounts/check-auth/`, {
                         withCredentials: true
                 });
@@ -25,4 +22,4 @@ const useAuth = () => {
     return isAuthenticated;
 };
 
-export default useAuth;
+export default UserAuth;

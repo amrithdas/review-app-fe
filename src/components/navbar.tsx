@@ -1,6 +1,7 @@
 import React from 'react';
-import useAuth from '../hooks/useAuth';
+import UserAuth from '../hooks/userAuth';
 import axios from 'axios';
+import baseURL from '../config';
 import Cookies from 'js-cookie';
 
 interface NavbarProps {
@@ -11,7 +12,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick, isFixed }) => {
 
-  const isAuthenticated = useAuth();
+  const isAuthenticated = UserAuth();
   // console.log(isAuthenticated)
 
   const handleLogout = async () => {
@@ -20,10 +21,6 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick, isFixed })
       const headers = {
         'X-CSRFToken': Cookies.get('csrftoken')
       };
-
-      const baseURL = process.env.NODE_ENV === 'production'
-                    ? process.env.REACT_APP_PROD_ENDPOINT
-                    : process.env.REACT_APP_DEV_ENDPOINT;
       const response = await axios.post(`${baseURL}accounts/logout/`, {}, {
           headers: headers,
           withCredentials: true  // Ensure credentials are included
@@ -64,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, onLoginClick, isFixed })
                   Signup
                 </button></>:<button
                 onClick={handleLogout}
-              className="text-white hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+              className="text-black border-solid border-2 border-black-600 hover:text-white-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
             >
               Logout
             </button>}

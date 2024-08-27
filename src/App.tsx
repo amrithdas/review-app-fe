@@ -11,6 +11,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Login from './components/login';
 import WriteaReview from './components/writeaReview';
 import WriteaReviewSearch from './components/writeaReviewSearch';
+import RestaurantReview from './components/restaurantReview';
 
 
 const Home: React.FC = () => {
@@ -62,6 +63,8 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/WriteaReview" element={<WriteaReview />} />
           <Route path="/WriteaReviewSearch" element={<WriteaReviewSearch/>} />
+          <Route path="/WriteaReview" element={<WriteaReview />} />
+          <Route path="/RestaurantReview" element={<RestaurantReview/>} />
 
 
         </Routes>

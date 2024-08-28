@@ -2,7 +2,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import user from "../assets/pic/user.png"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import SignupPopup from "./signUpPopUp";
 
@@ -13,11 +13,12 @@ interface SignupMiniProps {
 
 const SignupMini: React.FC<SignupMiniProps> = ({ onClose, onLoginOpen}) => {
     const [showEmailPopup, setShowEmailPopup] = useState(false);
+    const location = useLocation();
     const navigate = useNavigate();
   
     const handleClose = () => {
       onClose();
-      navigate('/');
+      navigate(location.pathname);
     };
 
     const handleEmailClick = () => {

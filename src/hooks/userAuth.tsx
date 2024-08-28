@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
+import baseURL from '../config';
 import axios from "axios";
 
-const useAuth = () => {
+const UserAuth = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/accounts/check-auth/', {
-                    withCredentials: true
+                    const response = await axios.get(`${baseURL}accounts/check-auth/`, {
+                        withCredentials: true
                 });
                 setIsAuthenticated(response.data.isAuthenticated);
             } catch (error) {
@@ -21,4 +22,4 @@ const useAuth = () => {
     return isAuthenticated;
 };
 
-export default useAuth;
+export default UserAuth;

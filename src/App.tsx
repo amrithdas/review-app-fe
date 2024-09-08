@@ -46,7 +46,7 @@ const App: React.FC = () => {
             <Route path="/restaurant" element={<Restaurant />} />
             <Route path="/writeareview" element={<WriteaReview />} />
             <Route path="/restaurants/review" element={<WriteaReviewSearch/>} />
-            <Route path="/RestaurantReview" element={<RestaurantReview/>} />
+            <Route path="/restaurant/:name" element={<RestaurantReview />} />
           </Routes>
       </Router>
     </AuthProvider>

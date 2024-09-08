@@ -38,7 +38,7 @@ const ReviewPage = () => {
                         </div>
                         <span className="text-gray-500">Select your rating</span>
                     </div>
-                    <a href="#" className="text-blue-500 hover:underline">Start your review of Mountain Mike's Pizza</a>
+                    <a href="/" className="text-blue-500 hover:underline">Start your review of Mountain Mike's Pizza</a>
                 </div>
             </div>
             <div className="flex row w-full">

@@ -1,32 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import rest from "../assets/pic/rest.jpg"
-import rest2 from "../assets/pic/rest2.jpg"
-import rest3 from "../assets/pic/rest2.jpg"
+import rest from "../assets/pic/rest.jpg";
+import rest2 from "../assets/pic/rest2.jpg";
+import rest3 from "../assets/pic/rest2.jpg";
 import { FaStar } from 'react-icons/fa';
+import axios from 'axios';
+import baseURL from '../config';
 
+interface RestaurantCarouselProps {
+    opening_time?: String;
+    closing_time?: String;
+    name?: String;
+    ratingStr?: string;
+}
 
-const RestaurantCarousel: React.FC = () => {
+const RestaurantCarousel: React.FC<RestaurantCarouselProps> = ({ opening_time, closing_time, name, ratingStr }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [rating, setRating] = useState<number>(0);
+  const [reviewCount, setReviewCount] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState<string>('Closed');
+  const [formattedOpeningTime, setFormattedOpeningTime] = useState('');
+  const [formattedClosingTime, setFormattedClosingTime] = useState('');
+  const [textColorClass, setTextcolorClass] = useState('');
   const slides = [
-    {
-      src: rest,
-
-
-    },
-    {
-      src: rest2,
-
-    },
-    {
-      src: rest3,
-
-    }
+    { src: rest },
+    { src: rest2 },
+    { src: rest3 }
   ];
+
+  useEffect(() => {
+    const fetchRestaurantDetails = async () => {
+      try {
+        if (name) {
+
+          // Set rating
+          setRating(ratingStr ? parseFloat(ratingStr) : 0);
+
+          const reviewsResponse = await axios.get(`${baseURL}restaurants/api/${name}/review_count/`);
+          setReviewCount(reviewsResponse.data.review_count);
+
+          // Determine if the restaurant is open or closed
+          const currentHour = new Date().getHours();
+          const openingHour = opening_time ? parseInt(opening_time.split(':')[0], 10) : 0;
+          const closingHour = closing_time ? parseInt(closing_time.split(':')[0], 10) : 0;
+          const openingTime = new Date();
+          openingTime.setHours(openingHour);
+          setFormattedClosingTime(openingTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+          const closingTime = new Date();
+          closingTime.setHours(closingHour);
+          setFormattedOpeningTime(closingTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+          
+          if (currentHour >= openingHour && currentHour < closingHour) {
+            setIsOpen('Open');
+          } else {
+            setIsOpen('Closed');
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching restaurant details:", error);
+      }
+    };
+
+    setTextcolorClass(isOpen === 'Open' ? 'text-green-500' : 'text-red-500');
+
+    fetchRestaurantDetails();
+  }, [name, opening_time, closing_time, ratingStr, isOpen]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex === slides.length - 1 ? 0 : prevIndex + 1));
-    }, 5000); // Change slides every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [slides.length]);
@@ -71,18 +114,45 @@ const RestaurantCarousel: React.FC = () => {
             style={{ backfaceVisibility: 'hidden' }}
           >
             <img src={slide.src} className="block w-full h-[60vh] object-cover" alt="..." />
-            <div className="absolute inset-x-[13%] bottom-5 hidden py-5  text-white md:block">
-              <h5 className="text-6xl font-bold">Mountain's Pizza</h5>
-              <div className="flex items-center mb-1">
-                {[1, 2, 3, 4, 5].map(() => (
-                  <button className="text-3xl focus:outline-none text-gray-200 p-2">
-                    <FaStar className={'text-white bg-orange-400 rounded p-1'} />
-                  </button>
-                ))}
+            <div className="absolute inset-x-[13%] bottom-5 hidden py-5 text-white md:block">
+              <h5 className="text-6xl font-bold pb-4">{name}</h5>
+              {rating !== null && (
+                <div className="flex items-center mb-1">
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const isFull = i < Math.floor(rating);
+                    const isHalf = i === Math.floor(rating) && rating % 1 !== 0;
+                  
+                    return (
+                      <div key={i} className="relative">
+                        <FaStar
+                          className={`${
+                            isFull
+                              ? 'text-yellow-400'
+                              : 'text-gray-100'
+                          } text-xl mx-1`}
+                        />
+                        {isHalf && (
+                          <FaStar
+                            className="text-yellow-400 text-xl mx-1 absolute top-0 left-0"
+                            style={{
+                              clipPath: 'inset(0 50% 0 0)',
+                            }}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              <p className="text-lg font-bold">{rating ? `${rating.toFixed(1)} (${reviewCount} reviews)` : 'No rating available'}</p>
+              <div className="flex items-center space-x-2">
+                <p className={`text-xl font-bold ${textColorClass}`}>
+                  {isOpen}
+                </p>
+                <p className="text-lg font-bold">
+                  {formattedOpeningTime} - {formattedClosingTime}
+                </p>
               </div>
-              <p className="text-sm">4.1 (118 reviews)</p>
-              <p className="text-sm">$5 Pizza, Chicken Wings</p>
-              <p className="text-sm">Closed • 11:00 AM - 12:00 AM (Next day)</p>
             </div>
           </div>
         ))}

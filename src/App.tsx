@@ -7,9 +7,11 @@ import Footer from './components/footer';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import WriteaReview from './components/writeaReview';
 import WriteaReviewSearch from './components/writeaReviewSearch';
+import RestaurantReview from './components/restaurantReview';
 import Restaurant from './components/restaurant';
 import { AuthProvider, useAuth } from './modals/authContext';
 import LoginModalManager from './modals/loginModalManager';
+
 
 
 const Home: React.FC = () => {
@@ -44,6 +46,7 @@ const App: React.FC = () => {
             <Route path="/restaurant" element={<Restaurant />} />
             <Route path="/writeareview" element={<WriteaReview />} />
             <Route path="/restaurants/review" element={<WriteaReviewSearch/>} />
+            <Route path="/restaurant/:name" element={<RestaurantReview />} />
           </Routes>
       </Router>
     </AuthProvider>

@@ -17,4 +17,4 @@ COPY . .
 RUN npm run build
 
 # Serve the React app
-CMD ["npm", "start"]
+CMD ["npm", "run", "prod"]

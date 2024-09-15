@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaStar, FaRegStar } from "react-icons/fa";
 import RestaurantSideBar from "./restaurantSideBar";
 import Footer from "./footer";
 import Navbar from "./navbar";
@@ -8,6 +7,7 @@ import baseURL from '../config';
 import { useAuth } from "../modals/authContext";
 import LoginModalManager from "../modals/loginModalManager";
 import GoogleMapComponent from "./googleMapComponent";
+import StarRating from "./starRating";
 
 interface RestaurantData {
     id: number; // Assuming you have an ID for each restaurant
@@ -24,6 +24,7 @@ interface RestaurantData {
     rating: string;
     opening_time: string;
     closing_time: string;
+    image_urls: string[];
 }
 
 const Restaurant: React.FC = () => {
@@ -120,19 +121,18 @@ const Restaurant: React.FC = () => {
                                 <div key={key} className="flex flex-col lg:flex-row gap-2 p-4 border-b-2 border-neutral-300 hover:shadow-md cursor-pointer"
                                      onClick={() => handleRestaurantClick(item.name)}>
                                     <div className="lg:w-1/2 p-2 text-black flex flex-col">
-                                        <div className="w-full overflow-hidden rounded-lg">
-                                            {/* <img src={item.image} alt="img" /> */}
+                                        <div className="w-full overflow-hidden rounded-lg">                                            
+                                            {item.image_urls && item.image_urls.length > 0 ? (
+                                                <img src={item.image_urls[0]} alt="Restaurant" />
+                                                ) : (
+                                                <img src="https://www.digitalmesh.com/blog/wp-content/uploads/2020/05/404-error.jpg" alt="Fallback" />
+                                            )}
                                         </div>
                                     </div>
                                     <div className="lg:w-full p-2 text-black flex flex-col">
                                         <h2 className="text-lg font-bold">{item.name}</h2>
                                         <div className="flex flex-row gap-2 items-center">
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaRegStar style={{ color: "grey" }} />
-                                            <p>{item.rating}<span className="text-gray-500">({item.reviews} reviews)</span></p>
+                                            <StarRating ratingStr={item.rating}/>
                                         </div>
                                         <p>{item.description} <span className="text-indigo-400"></span></p>
                                         <div className="flex flex-wrap mt-2 gap-2 items-center text-xs font-medium text-slate-600">

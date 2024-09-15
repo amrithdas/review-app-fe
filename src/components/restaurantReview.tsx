@@ -32,12 +32,14 @@ interface RestaurantData {
     rating: string;
     opening_time: string;
     closing_time: string;
+    image_urls: string[];
 }
 
 const RestaurantReview: React.FC = () => {
     const { name } = useParams<{ name: string }>();
     const [restaurantData, setRestaurantData] = useState<RestaurantData>();
     const [error, setError] = useState(false);
+    const [reviewCount, setReviewCount] = useState<number>(0);
     const { handleSignupOpen, handleLoginOpen } = useAuth();
     const isAuthenticated = UserAuth();
     const navigate = useNavigate();
@@ -58,6 +60,8 @@ const RestaurantReview: React.FC = () => {
                     const response = await axios.get(`${baseURL}restaurants/api/restaurant/${name}/`);
                     const data = response.data.restaurant;
                     setRestaurantData(data);
+                    const reviewsResponse = await axios.get(`${baseURL}restaurants/api/${name}/review_count/`);
+                    setReviewCount(reviewsResponse.data.review_count);
                 }
             } catch (error) {
                 console.error("Error fetching restaurant details:", error);
@@ -80,7 +84,7 @@ const RestaurantReview: React.FC = () => {
     return (
         <>
         <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={false} />
-            <RestaurantCarousel opening_time={restaurantData?.opening_time} closing_time={restaurantData?.closing_time} name={restaurantData?.name} ratingStr={restaurantData?.rating} />
+            <RestaurantCarousel opening_time={restaurantData?.opening_time} closing_time={restaurantData?.closing_time} name={restaurantData?.name} ratingStr={restaurantData?.rating} image_urls={restaurantData?.image_urls} reviewCount={reviewCount} />
             <div className="m-48 my-4 m-36 flex row gap-10">
                 <div className=" w-3/5	">
 
@@ -96,7 +100,7 @@ const RestaurantReview: React.FC = () => {
                             <LocationHours location={restaurantData?.location} openingTime={restaurantData?.opening_time} closingTime={restaurantData?.closing_time} address={restaurantData?.address} />
                         </main>
                         <div>
-                            <ReviewPage/>
+                            <ReviewPage name={restaurantData?.name} reviewCount={reviewCount} ratingStr={restaurantData?.rating}/>
                         </div>
                 </div>
                 {/* ////////////////////////////Right section /////////////////////////////////////// */}

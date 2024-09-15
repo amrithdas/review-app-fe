@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import rest from "../assets/pic/rest.jpg";
-import rest2 from "../assets/pic/rest2.jpg";
-import rest3 from "../assets/pic/rest2.jpg";
-import { FaStar } from 'react-icons/fa';
-import axios from 'axios';
-import baseURL from '../config';
+import StarRating from './starRating';
 
 interface RestaurantCarouselProps {
     opening_time?: String;
     closing_time?: String;
     name?: String;
     ratingStr?: string;
+    image_urls?: string[];
+    reviewCount:number;
 }
 
-const RestaurantCarousel: React.FC<RestaurantCarouselProps> = ({ opening_time, closing_time, name, ratingStr }) => {
+const RestaurantCarousel: React.FC<RestaurantCarouselProps> = ({ opening_time, closing_time, name, ratingStr, image_urls, reviewCount }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [rating, setRating] = useState<number>(0);
-  const [reviewCount, setReviewCount] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<string>('Closed');
   const [formattedOpeningTime, setFormattedOpeningTime] = useState('');
   const [formattedClosingTime, setFormattedClosingTime] = useState('');
   const [textColorClass, setTextcolorClass] = useState('');
+  const fallbackImage = "https://www.digitalmesh.com/blog/wp-content/uploads/2020/05/404-error.jpg";
   const slides = [
-    { src: rest },
-    { src: rest2 },
-    { src: rest3 }
+    { src: (image_urls && image_urls[0]) ? image_urls[0] : fallbackImage },
+    { src: (image_urls && image_urls[1]) ? image_urls[1] : fallbackImage },
+    { src: (image_urls && image_urls[2]) ? image_urls[2] : fallbackImage }
   ];
 
   useEffect(() => {
@@ -32,25 +28,24 @@ const RestaurantCarousel: React.FC<RestaurantCarouselProps> = ({ opening_time, c
       try {
         if (name) {
 
-          // Set rating
-          setRating(ratingStr ? parseFloat(ratingStr) : 0);
-
-          const reviewsResponse = await axios.get(`${baseURL}restaurants/api/${name}/review_count/`);
-          setReviewCount(reviewsResponse.data.review_count);
-
           // Determine if the restaurant is open or closed
-          const currentHour = new Date().getHours();
-          const openingHour = opening_time ? parseInt(opening_time.split(':')[0], 10) : 0;
-          const closingHour = closing_time ? parseInt(closing_time.split(':')[0], 10) : 0;
-          const openingTime = new Date();
-          openingTime.setHours(openingHour);
-          setFormattedClosingTime(openingTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+          const currentDateTime = new Date();
+          const [openingHour, openingMinute] = opening_time? opening_time.split(':').map(Number): [0, 0];
+          const [closingHour, closingMinute] = closing_time? closing_time.split(':').map(Number): [0, 0];
+          const openingDateTime = new Date();
+          openingDateTime.setHours(openingHour, openingMinute, 0, 0);
 
-          const closingTime = new Date();
-          closingTime.setHours(closingHour);
-          setFormattedOpeningTime(closingTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+          setFormattedOpeningTime(openingDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+          const closingDateTime = new Date();
+          closingDateTime.setHours(closingHour, closingMinute, 0, 0);
+          setFormattedClosingTime(closingDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+          if (closingDateTime <= openingDateTime) {
+            closingDateTime.setDate(closingDateTime.getDate() + 1); // Add 1 day to closing time
+          }
           
-          if (currentHour >= openingHour && currentHour < closingHour) {
+          if (currentDateTime >= openingDateTime && currentDateTime < closingDateTime) {
             setIsOpen('Open');
           } else {
             setIsOpen('Closed');
@@ -116,35 +111,10 @@ const RestaurantCarousel: React.FC<RestaurantCarouselProps> = ({ opening_time, c
             <img src={slide.src} className="block w-full h-[60vh] object-cover" alt="..." />
             <div className="absolute inset-x-[13%] bottom-5 hidden py-5 text-white md:block">
               <h5 className="text-6xl font-bold pb-4">{name}</h5>
-              {rating !== null && (
-                <div className="flex items-center mb-1">
-                  {Array.from({ length: 5 }, (_, i) => {
-                    const isFull = i < Math.floor(rating);
-                    const isHalf = i === Math.floor(rating) && rating % 1 !== 0;
-                  
-                    return (
-                      <div key={i} className="relative">
-                        <FaStar
-                          className={`${
-                            isFull
-                              ? 'text-yellow-400'
-                              : 'text-gray-100'
-                          } text-xl mx-1`}
-                        />
-                        {isHalf && (
-                          <FaStar
-                            className="text-yellow-400 text-xl mx-1 absolute top-0 left-0"
-                            style={{
-                              clipPath: 'inset(0 50% 0 0)',
-                            }}
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+              {ratingStr !== null && (
+                <StarRating ratingStr={ratingStr}/>
               )}
-              <p className="text-lg font-bold">{rating ? `${rating.toFixed(1)} (${reviewCount} reviews)` : 'No rating available'}</p>
+              <p className="text-lg font-bold">{ratingStr ? `(${reviewCount} reviews)` : 'No rating available'}</p>
               <div className="flex items-center space-x-2">
                 <p className={`text-xl font-bold ${textColorClass}`}>
                   {isOpen}

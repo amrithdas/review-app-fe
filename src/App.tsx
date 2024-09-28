@@ -11,6 +11,7 @@ import RestaurantReview from './components/restaurantReview';
 import Restaurant from './components/restaurant';
 import { AuthProvider, useAuth } from './modals/authContext';
 import LoginModalManager from './modals/loginModalManager';
+import Profile from './components/profile';
 
 
 
@@ -47,6 +48,7 @@ const App: React.FC = () => {
             <Route path="/writeareview" element={<WriteaReview />} />
             <Route path="/restaurants/review" element={<WriteaReviewSearch/>} />
             <Route path="/restaurant/:name" element={<RestaurantReview />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
       </Router>
     </AuthProvider>

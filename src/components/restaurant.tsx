@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import RestaurantSideBar from "./restaurantSideBar";
 import Footer from "./footer";
 import Navbar from "./navbar";
@@ -7,8 +7,10 @@ import baseURL from '../config';
 import { useAuth } from "../modals/authContext";
 import LoginModalManager from "../modals/loginModalManager";
 import GoogleMapComponent from "./googleMapComponent";
+import StarRating from "./starRating";
 
 interface RestaurantData {
+    id: number; // Assuming you have an ID for each restaurant
     name: string;
     address: string;
     description: string;
@@ -17,11 +19,12 @@ interface RestaurantData {
     cafe: boolean;
     bakery: boolean;
     website: string;
-    location: string; // This should contain latitude and longitude
+    location: string;
     reviews: number;
     rating: string;
     opening_time: string;
     closing_time: string;
+    image_urls: string[];
 }
 
 const Restaurant: React.FC = () => {
@@ -29,7 +32,9 @@ const Restaurant: React.FC = () => {
     const [restaurantData, setRestaurantData] = useState<RestaurantData[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
-    const [sortBy, setSortBy] = useState<string>('recommended'); // Track sorting criteria
+    const [sortBy, setSortBy] = useState<string>('recommended');
+
+    const navigate = useNavigate();
 
     const fetchRestaurants = async (page: number, sortBy: string, lat: number = 0, lng: number = 0) => {
         try {
@@ -45,19 +50,8 @@ const Restaurant: React.FC = () => {
 
     const handleSortChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         const newSortBy = event.target.value;
-        setSortBy(newSortBy); // Update sort criteria
-        setCurrentPage(1); // Reset page to 1 when sorting changes
-
-        // if (newSortBy === 'nearest') {
-        //     try {
-        //         const { latitude, longitude } = await getUserLocation();
-        //         fetchRestaurants(1, newSortBy, latitude, longitude); // Fetch first page with new sort criteria
-        //     } catch (error) {
-        //         console.error("Error getting user location:", error);
-        //     }
-        // } else {
-        //     fetchRestaurants(1, newSortBy); // Fetch first page with new sort criteria
-        // }
+        setSortBy(newSortBy);
+        setCurrentPage(1);
     };
 
     const getUserLocation = (): Promise<GeolocationCoordinates> => {
@@ -70,7 +64,6 @@ const Restaurant: React.FC = () => {
     };
 
     useEffect(() => {
-        // Ensure currentPage and sortBy are used correctly for fetching data
         if (sortBy === 'nearest') {
             getUserLocation().then(({ latitude, longitude }) => {
                 fetchRestaurants(currentPage, sortBy, latitude, longitude);
@@ -94,48 +87,52 @@ const Restaurant: React.FC = () => {
         }
     };
 
+    const handleRestaurantClick = (name: string) => {
+        navigate(`/restaurant/${name}`);
+    };
+
     const center = {
-        lat: 9.677964248783864, // Replace with a central latitude for Kochi
-        lng: 76.30516811712164, // Replace with a central longitude for Kochi
+        lat: 9.677964248783864,
+        lng: 76.30516811712164,
     };
 
     return (
         <>
-        <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={true} />
-        <div className="flex flex-col lg:flex-row gap-2 mb-6 mt-16">
-            <div className="lg:w-1/5 p-4 text-black">
-                <RestaurantSideBar />
-            </div>
-            <div className="lg:w-3/5 p-4 text-black flex flex-col">
-                <div className="flex flex-col lg:flex-row justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold">Top 10 Best Rated Restaurants Near Kochi, Kerala</h1>
-                    <div className="flex flex-row justify-between items-center mb-4">
-                        <p className="text-base font-normal">Sort:</p>
-                        <select className="text-base font-medium bg-white rounded p-1" value={sortBy} onChange={handleSortChange}>
-                            <option value="recommended">Recommended</option>
-                            <option value="nearest">Nearest</option>
-                            <option value="rating">Rating</option>
-                        </select>
-                    </div>
+            <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={true} />
+            <div className="flex flex-col lg:flex-row gap-2 mb-6 mt-16">
+                <div className="lg:w-1/5 p-4 text-black">
+                    <RestaurantSideBar />
                 </div>
+                <div className="lg:w-3/5 p-4 text-black flex flex-col">
+                    <div className="flex flex-col lg:flex-row justify-between items-center mb-4">
+                        <h1 className="text-2xl font-bold">Top 10 Best Rated Restaurants Near Kochi, Kerala</h1>
+                        <div className="flex flex-row justify-between items-center mb-4">
+                            <p className="text-base font-normal">Sort:</p>
+                            <select className="text-base font-medium bg-white rounded p-1" value={sortBy} onChange={handleSortChange}>
+                                <option value="recommended">Recommended</option>
+                                <option value="nearest">Nearest</option>
+                                <option value="rating">Rating</option>
+                            </select>
+                        </div>
+                    </div>
                     {
                         restaurantData.map((item, key) => {
                             return (
-                                <div key={key} className="flex flex-col lg:flex-row gap-2 p-4 border-b-2 border-neutral-300 hover:shadow-md">
+                                <div key={key} className="flex flex-col lg:flex-row gap-2 p-4 border-b-2 border-neutral-300 hover:shadow-md cursor-pointer"
+                                     onClick={() => handleRestaurantClick(item.name)}>
                                     <div className="lg:w-1/2 p-2 text-black flex flex-col">
-                                        <div className="w-full overflow-hidden rounded-lg">
-                                            {/* <img src={item.image} alt="img" /> */}
+                                        <div className="w-full overflow-hidden rounded-lg">                                            
+                                            {item.image_urls && item.image_urls.length > 0 ? (
+                                                <img src={item.image_urls[0]} alt="Restaurant" />
+                                                ) : (
+                                                <img src="https://www.digitalmesh.com/blog/wp-content/uploads/2020/05/404-error.jpg" alt="Fallback" />
+                                            )}
                                         </div>
                                     </div>
                                     <div className="lg:w-full p-2 text-black flex flex-col">
                                         <h2 className="text-lg font-bold">{item.name}</h2>
                                         <div className="flex flex-row gap-2 items-center">
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaStar style={{ color: "orange" }} />
-                                            <FaRegStar style={{ color: "grey" }} />
-                                            <p>{item.rating}<span className="text-gray-500">({item.reviews} reviews)</span></p>
+                                            <StarRating ratingStr={item.rating}/>
                                         </div>
                                         <p>{item.description} <span className="text-indigo-400"></span></p>
                                         <div className="flex flex-wrap mt-2 gap-2 items-center text-xs font-medium text-slate-600">
@@ -175,12 +172,12 @@ const Restaurant: React.FC = () => {
                         </button>
                     </div>
                 </div>
-                    <GoogleMapComponent restaurantData={restaurantData} center={center} />
+                <GoogleMapComponent restaurantData={restaurantData} center={center} />
             </div>
             <Footer />
             <LoginModalManager />
         </>
     );
-}
+};
 
 export default Restaurant;

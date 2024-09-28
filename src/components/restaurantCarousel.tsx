@@ -1,32 +1,70 @@
 import React, { useEffect, useState } from 'react';
-import rest from "../assets/pic/rest.jpg"
-import rest2 from "../assets/pic/rest2.jpg"
-import rest3 from "../assets/pic/rest2.jpg"
-import { FaStar } from 'react-icons/fa';
+import StarRating from './starRating';
 
+interface RestaurantCarouselProps {
+    opening_time?: String;
+    closing_time?: String;
+    name?: String;
+    ratingStr?: string;
+    image_urls?: string[];
+    reviewCount:number;
+}
 
-const RestaurantCarousel: React.FC = () => {
+const RestaurantCarousel: React.FC<RestaurantCarouselProps> = ({ opening_time, closing_time, name, ratingStr, image_urls, reviewCount }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState<string>('Closed');
+  const [formattedOpeningTime, setFormattedOpeningTime] = useState('');
+  const [formattedClosingTime, setFormattedClosingTime] = useState('');
+  const [textColorClass, setTextcolorClass] = useState('');
+  const fallbackImage = "https://www.digitalmesh.com/blog/wp-content/uploads/2020/05/404-error.jpg";
   const slides = [
-    {
-      src: rest,
-
-
-    },
-    {
-      src: rest2,
-
-    },
-    {
-      src: rest3,
-
-    }
+    { src: (image_urls && image_urls[0]) ? image_urls[0] : fallbackImage },
+    { src: (image_urls && image_urls[1]) ? image_urls[1] : fallbackImage },
+    { src: (image_urls && image_urls[2]) ? image_urls[2] : fallbackImage }
   ];
+
+  useEffect(() => {
+    const fetchRestaurantDetails = async () => {
+      try {
+        if (name) {
+
+          // Determine if the restaurant is open or closed
+          const currentDateTime = new Date();
+          const [openingHour, openingMinute] = opening_time? opening_time.split(':').map(Number): [0, 0];
+          const [closingHour, closingMinute] = closing_time? closing_time.split(':').map(Number): [0, 0];
+          const openingDateTime = new Date();
+          openingDateTime.setHours(openingHour, openingMinute, 0, 0);
+
+          setFormattedOpeningTime(openingDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+          const closingDateTime = new Date();
+          closingDateTime.setHours(closingHour, closingMinute, 0, 0);
+          setFormattedClosingTime(closingDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+          if (closingDateTime <= openingDateTime) {
+            closingDateTime.setDate(closingDateTime.getDate() + 1); // Add 1 day to closing time
+          }
+          
+          if (currentDateTime >= openingDateTime && currentDateTime < closingDateTime) {
+            setIsOpen('Open');
+          } else {
+            setIsOpen('Closed');
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching restaurant details:", error);
+      }
+    };
+
+    setTextcolorClass(isOpen === 'Open' ? 'text-green-500' : 'text-red-500');
+
+    fetchRestaurantDetails();
+  }, [name, opening_time, closing_time, ratingStr, isOpen]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex === slides.length - 1 ? 0 : prevIndex + 1));
-    }, 5000); // Change slides every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [slides.length]);
@@ -71,18 +109,20 @@ const RestaurantCarousel: React.FC = () => {
             style={{ backfaceVisibility: 'hidden' }}
           >
             <img src={slide.src} className="block w-full h-[60vh] object-cover" alt="..." />
-            <div className="absolute inset-x-[13%] bottom-5 hidden py-5  text-white md:block">
-              <h5 className="text-6xl font-bold">Mountain's Pizza</h5>
-              <div className="flex items-center mb-1">
-                {[1, 2, 3, 4, 5].map(() => (
-                  <button className="text-3xl focus:outline-none text-gray-200 p-2">
-                    <FaStar className={'text-white bg-orange-400 rounded p-1'} />
-                  </button>
-                ))}
+            <div className="absolute inset-x-[13%] bottom-5 hidden py-5 text-white md:block">
+              <h5 className="text-6xl font-bold pb-4">{name}</h5>
+              {ratingStr !== null && (
+                <StarRating ratingStr={ratingStr}/>
+              )}
+              <p className="text-lg font-bold">{ratingStr ? `(${reviewCount} reviews)` : 'No rating available'}</p>
+              <div className="flex items-center space-x-2">
+                <p className={`text-xl font-bold ${textColorClass}`}>
+                  {isOpen}
+                </p>
+                <p className="text-lg font-bold">
+                  {formattedOpeningTime} - {formattedClosingTime}
+                </p>
               </div>
-              <p className="text-sm">4.1 (118 reviews)</p>
-              <p className="text-sm">$5 Pizza, Chicken Wings</p>
-              <p className="text-sm">Closed • 11:00 AM - 12:00 AM (Next day)</p>
             </div>
           </div>
         ))}

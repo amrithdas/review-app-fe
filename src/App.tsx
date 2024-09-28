@@ -63,18 +63,17 @@ const Home: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/WriteaReview" element={<WriteaReview />} />
-          <Route path="/WriteaReviewSearch" element={<WriteaReviewSearch/>} />
-          <Route path="/WriteaReview" element={<WriteaReview />} />
-          <Route path="/RestaurantReview" element={<RestaurantReview/>} />
-          <Route path="/RestaurantReview" element={<RestaurantReview/>} />
-
-
-        </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/restaurant" element={<Restaurant />} />
+            <Route path="/writeareview" element={<WriteaReview />} />
+            <Route path="/restaurants/review" element={<WriteaReviewSearch/>} />
+            <Route path="/restaurant/:name" element={<RestaurantReview />} />
+          </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -20,7 +20,7 @@ interface RestaurantData {
 interface GoogleMapProps {
     restaurantData: RestaurantData[];
     center: { lat: number; lng: number };
-  }
+}
 
 const mapContainerStyle = {
   width: '100%',

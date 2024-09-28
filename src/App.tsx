@@ -12,6 +12,7 @@ import Login from './components/login';
 import WriteaReview from './components/writeaReview';
 import WriteaReviewSearch from './components/writeaReviewSearch';
 import RestaurantReview from './components/restaurantReview';
+import Profile from './components/profile';
 
 
 const Home: React.FC = () => {
@@ -50,10 +51,13 @@ const Home: React.FC = () => {
         </div>
         <div className=" mx-auto b-0 mt-16">
           <Footer />
+          
         </div>
+       
         {isSignupOpen && <SignupMini onClose={handleSignupClose} onLoginOpen={handleLoginOpen}/>}
         {isLoginOpen && <Login onClose={handleLoginClose} onSignupOpen={handleSignupOpen}/>}
       </div>
+    
   )
 }
 
@@ -66,6 +70,7 @@ const App: React.FC = () => {
           <Route path="/WriteaReviewSearch" element={<WriteaReviewSearch/>} />
           <Route path="/WriteaReview" element={<WriteaReview />} />
           <Route path="/RestaurantReview" element={<RestaurantReview/>} />
+          <Route path="/Profile" element={<Profile/>} />
 
 
         </Routes>

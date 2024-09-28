@@ -1,23 +1,45 @@
 // src/components/RecentActivity.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReviewBox from './reviewbox';
+import axios from 'axios';
+import baseURL from '../config';
 
-const reviews = [
-    { title: "Great Place!", content: "Had an amazing time.", author: "John Doe" },
-    { title: "Good Service", content: "Friendly staff and quick service.", author: "Jane Smith" },
-    { title: "Loved the Ambience", content: "The atmosphere was fantastic.", author: "Emily Johnson" },
-    { title: "Delicious Food", content: "The food was absolutely delicious.", author: "Chris Lee" },
-    { title: "Will Visit Again", content: "Definitely coming back soon.", author: "Patricia Brown" },
-    { title: "Highly Recommend", content: "Highly recommend to everyone.", author: "Michael Davis" },
-    { title: "Nice Decor", content: "The decor was very nice and cozy.", author: "Jessica Wilson" },
-    { title: "Affordable", content: "Great prices for the quality.", author: "David Martinez" },
-    { title: "Friendly Staff", content: "The staff were very friendly.", author: "Sarah Thomas" },
-    { title: "Quick Service", content: "Service was quick and efficient.", author: "Robert Taylor" },
-    { title: "Perfect Date Spot", content: "Perfect place for a date night.", author: "Laura Anderson" },
-    { title: "Family Friendly", content: "Great place for family gatherings.", author: "James White" },
-  ];
+interface Review {
+  restaurant_name: string;
+  description: string;
+  user_name: string;
+  rating: number;
+  created_at: string;
+}
 
 const RecentActivity: React.FC = () => {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const loadReviews = async (page: number) => {
+    try {
+      const response = await axios.get(`${baseURL}restaurants/api/recent-reviews?page=${page}`);
+      const newReviews = response.data.reviews;
+
+      if (newReviews.length < 12) {
+        setHasMore(false);  // No more reviews to load
+      }
+
+      setReviews(prevReviews => [...prevReviews, ...newReviews]);
+    } catch (error) {
+      console.error("There was an error fetching the reviews!", error);
+    }
+  };
+
+  useEffect(() => {
+    loadReviews(page);
+  }, [page]);
+
+  const handleShowMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
   return (
     <div className="px-4">
       <h2 className="text-3xl font-bold mb-10 my-10 text-center">Recent Activity</h2>
@@ -25,15 +47,20 @@ const RecentActivity: React.FC = () => {
         {reviews.map((review, index) => (
           <ReviewBox
             key={index}
-            title={review.title}
-            content={review.content}
-            author={review.author}
+            title={review.restaurant_name}
+            content={review.description}
+            author={review.user_name}
+            rating={review.rating}
           />
         ))}
       </div>
-      <div className="text-l mt-11 text-center mt-4">
-        <a href="#more-activity" className="text-blue-500 hover:underline">Show More Activity</a>
-      </div>
+      {hasMore && (
+        <div className="text-l mt-11 text-center mt-4">
+          <button onClick={handleShowMore} className="text-blue-500 hover:underline">
+            Show More Activity
+          </button>
+        </div>
+      )}
       <hr className="my-14 opacity-50 border-t border-gray-300" />
     </div>
   );

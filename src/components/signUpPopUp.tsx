@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SuccessMessage from './alertPopup';
+import baseURL from '../config';
 
 interface SignupPopupProps {
   onClose: () => void;
@@ -45,7 +46,7 @@ const SignupPopup: React.FC<SignupPopupProps> = ({ onClose, onLoginOpen }) => {
     };
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/accounts/signup/', data, {
+      const response = await axios.post(`${baseURL}accounts/signup/`, data, {
         headers: {
           'Content-Type': 'application/json',
         },

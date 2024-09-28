@@ -1,4 +1,5 @@
 import axios from "axios";
+import baseURL from '../config';
 import { useEffect, useState } from "react";
 
 
@@ -25,8 +26,8 @@ const CSRFToken = () => {
     useEffect(() => {
         const fetchData = async () => {
             try{
-               await axios.get('http://127.0.0.1:8000/accounts/csrf/', {
-                withCredentials: true
+                await axios.get(`${baseURL}accounts/csrf/`, {
+                    withCredentials: true
                });
                const token = getCookie('csrftoken');
                if (token) {

@@ -1,19 +1,50 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import baseURL from "../config";
+import Popup from "./popUp";
 const RestaurantSideBar: React.FC = () => {
     // const [priceRange, setPriceRange] = useState([0, 1000]);
 //   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [distance, setDistance] = useState(0);
+  // const [distance, setDistance] = useState(0);
 
-  const categories = ['Vegetarian', 'Chinese', 'South Indian', 'North Indian'];
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-//   const handleCategoryChange = (category) => {
-//     setSelectedCategories((prev) =>
-//       prev.includes(category)
-//         ? prev.filter((item) => item !== category)
-//         : [...prev, category]
-//     );
-//   };
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${baseURL}restaurants/api/get-tags/`);
+        setCategories(response.data.distinct_tags);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((item) => item !== category)
+        : [...prev, category]
+    );
+  };
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  useState<string[]>([]);
+
+  const handlePopupClose = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handlePopupSave = (selectedCategories: string[]) => {
+    setSelectedCategories(selectedCategories);
+  };
 
   return (
     <div className="w-64 p-4 ">
@@ -45,20 +76,28 @@ const RestaurantSideBar: React.FC = () => {
 
       <div className="mb-4">
         <h3 className="font-medium mb-2">Categories</h3>
-        {categories.map((category) => (
+        {categories.slice(0, 6).map((category) => (
           <label key={category} className="flex items-center mb-1">
             <input
               type="checkbox"
-            //   checked={selectedCategories.includes(category)}
-            //   onChange={() => handleCategoryChange(category)}
+              checked={selectedCategories.includes(category)}
+              onChange={() => handleCategoryChange(category)}
               className="mr-2"
             />
             {category}
           </label>
         ))}
+        {categories.length > 6 && (
+          <button 
+            onClick={openPopup}
+            className="text-blue-500 underline mt-2"
+          >
+            See All
+          </button>
+        )}
       </div>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <h3 className="font-medium mb-2">Distance</h3>
         <input
           type="range"
@@ -71,7 +110,15 @@ const RestaurantSideBar: React.FC = () => {
         <div className="text-xs mt-2">
           <span>{distance} km</span>
         </div>
-      </div>
+      </div> */}
+      {isPopupOpen && (
+        <Popup 
+          categories={categories}
+          selectedCategories={selectedCategories}
+          onClose={handlePopupClose}
+          onSave={handlePopupSave}
+        />
+      )}
     </div>
   );
 }

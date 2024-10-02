@@ -1,5 +1,6 @@
-import { FcGoogle } from "react-icons/fc";
-import { FaApple } from "react-icons/fa";
+// import { FcGoogle } from "react-icons/fc";
+import { GoogleLogin } from '@react-oauth/google';
+// import { FaApple } from "react-icons/fa";
 import user from "../assets/pic/user.png"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -65,6 +66,22 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
             console.error('An error occurred:', error);
         }
     };
+
+    const handleGoogleSuccess = async (credentialResponse: any) => {
+        try {
+            const response = await axios.post(`${baseURL}accounts/google-login/`, {
+                id_token: credentialResponse.credential
+            }, { withCredentials: true });
+
+            if (response.status === 200) {
+                window.location.reload();
+            }
+        } catch (error) {
+            setError('Google login failed. Please try again.');
+            console.error('Google login error:', error);
+        }
+    };
+
     
 
     return (
@@ -83,18 +100,19 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
                     <p className='text-sm text-slate-400 text-center text-xs'>By proceeding you agree to <span className='text-cyan-500'>Terms of Service</span> and acknowledge <span className='text-cyan-500'>Privacy Policy</span></p>
                 </div>
                 <div className="space-y-4 mb-6">
-                    <button className="flex items-center justify-left w-full py-2 px-4 border border-gray-300 rounded hover:bg-gray-100">
-                        <div className='flex w-full items-center justify-center gap-3'>
-                            <div className=''><FcGoogle style={{ fontSize: 22 }} /></div>
-                            <p className=''>Continue with Google</p>
-                        </div>
-                    </button>
-                    <button className="flex items-center justify-left w-full py-2 px-4 border border-gray-300 rounded hover:bg-gray-100">
+                <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={() => {
+                            console.error('Login Failed');
+                        }}
+                        // style={{ width: '100%' }}
+                    />
+                    {/* <button className="flex items-center justify-left w-full py-2 px-4 border border-gray-300 rounded hover:bg-gray-100">
                         <div className='flex w-full items-center justify-center gap-3'>
                             <div className=''><FaApple style={{ fontSize: 24 }} /></div>
                             <p className=''>Continue with Apple</p>
                         </div>
-                    </button>
+                    </button> */}
                     <div className="flex items-center my-4">
                         <hr className="flex-grow border-t border-gray-400" />
                         <span className="mx-4">or</span>

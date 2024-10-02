@@ -12,6 +12,14 @@ import Restaurant from './components/restaurant';
 import { AuthProvider, useAuth } from './modals/authContext';
 import LoginModalManager from './modals/loginModalManager';
 import Profile from './components/profile';
+import AboutUs from './components/aboutUs';
+import TermsOfService from './components/termsOfService';
+import PrivacyPolicy from './components/privacyPolicy';
+import Events from './components/events';
+import HelpSection from './components/help';
+import SupportSection from './components/support';
+import AdvertiseSection from './components/advertise';
+import BusinessSupport from './components/businessSupport';
 
 
 
@@ -49,6 +57,14 @@ const App: React.FC = () => {
             <Route path="/restaurants/review" element={<WriteaReviewSearch/>} />
             <Route path="/restaurant/:name" element={<RestaurantReview />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/about-us" element={<AboutUs/>}/>
+            <Route path="/terms-of-service" element={<TermsOfService/>}/>
+            <Route path="/privacy" element={<PrivacyPolicy/>}/>
+            <Route path="/events" element={<Events/>}/>
+            <Route path="/help" element={<HelpSection/>}/>
+            <Route path="/support" element={<SupportSection/>}/>
+            <Route path="/advertise" element={<AdvertiseSection/>}/>
+            <Route path="/business-support" element={<BusinessSupport/>}/>
           </Routes>
       </Router>
     </AuthProvider>

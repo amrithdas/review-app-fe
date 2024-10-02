@@ -94,7 +94,7 @@ const Profile: React.FC = () => {
   }, [activeTab, user]);
 
   useEffect(() => {
-    if (user && reviewCount !== 0) {
+    if (user !== null) {
       setLoading(false);
     }
   }, [user, reviewCount]);

@@ -1,5 +1,5 @@
 import { FcGoogle } from "react-icons/fc";
-import { FaApple } from "react-icons/fa";
+// import { FaApple } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import user from "../assets/pic/user.png"
 import { useNavigate, useLocation } from "react-router-dom";
@@ -56,12 +56,12 @@ const SignupMini: React.FC<SignupMiniProps> = ({ onClose, onLoginOpen}) => {
                             <p className=''>Continue with Google</p>
                         </div>
                     </button>
-                    <button className="flex items-center   justify-left w-full py-2 px-4  border border-gray-300 rounded hover:bg-gray-100">
+                    {/* <button className="flex items-center   justify-left w-full py-2 px-4  border border-gray-300 rounded hover:bg-gray-100">
                         <div className='flex  w-full items-center justify-center gap-3'>
                             <div className=''>  <FaApple style={{ fontSize: 24 }} /></div>
                             <p className=''>  Continue with Apple</p>
                         </div>
-                    </button>
+                    </button> */}
                     <button 
                       className="flex items-center justify-left w-full py-2 px-4  border border-gray-300 rounded hover:bg-gray-100"
                       onClick={handleEmailClick}

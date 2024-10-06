@@ -10,7 +10,7 @@ interface RestaurantData {
   cafe: boolean;
   bakery: boolean;
   website: string;
-  location: string; // This should contain latitude and longitude as a string "lat,lng"
+  location: string;
   reviews: number;
   rating: string;
   opening_time: string;
@@ -32,10 +32,12 @@ const mapContainerStyle = {
 //   lng: -38.523,
 // };
 
+const libraries: ('places')[] = ['places'];
+
 const GoogleMapComponent:  React.FC<GoogleMapProps> = ({ restaurantData, center }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyDRl2V_KIzWoXQ8wBeK7xDWbKcfE2MtV-g',
-    libraries: ['places'], // Add any libraries you need here
+    libraries,
   });
 
   const [selectedRestaurant, setSelectedRestaurant] = useState<RestaurantData | null>(null);
@@ -50,7 +52,7 @@ const GoogleMapComponent:  React.FC<GoogleMapProps> = ({ restaurantData, center 
         zoom={12}
       >
         {restaurantData.map((item, index) => {
-          const [lat, lng] = item.location.split(',').map(Number); // Assuming location is "lat,lng"
+          const [lat, lng] = item.location.split(',').map(Number);
           return (
             <Marker
               key={index}

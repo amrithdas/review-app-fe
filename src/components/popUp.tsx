@@ -25,29 +25,42 @@ const Popup: React.FC<PopupProps> = ({ categories, selectedCategories, onClose, 
     onClose();
   };
 
+  const handleClearAll = () => {
+    setSelected([]);
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded-lg shadow-lg w-1/2 h-3/4 max-h-3/4 overflow-y-auto">
+      <div className="bg-white p-4 rounded-lg shadow-lg w-1/2 h-3/4 max-h-3/4">
         <h2 className="text-xl font-bold mb-4 text-center">All Categories</h2>
-        <div className="grid grid-cols-2 gap-2">
-          {categories.map((category) => (
-            <label key={category} className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-2"
-                checked={selected.includes(category)}
-                onChange={() => handleCheckboxChange(category)}
-              />
-              {category}
-            </label>
-          ))}
+        <div className="overflow-y-auto h-[70%] p-2 rounded-lg border">
+          <div className="grid grid-cols-2 gap-2">
+            {categories.map((category) => (
+              <label key={category} className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2"
+                  checked={selected.includes(category)}
+                  onChange={() => handleCheckboxChange(category)}
+                />
+                {category}
+              </label>
+            ))}
+          </div>
         </div>
+  
         <div className="text-center mt-4">
           <button 
             className="bg-blue-500 text-white py-2 px-4 rounded"
             onClick={handleSave}
           >
             Filter
+          </button>
+          <button 
+            className="bg-red-400 text-white py-2 px-4 rounded ml-2"
+            onClick={handleClearAll}
+          >
+            Clear All
           </button>
           <button 
             className="bg-gray-500 text-white py-2 px-4 rounded ml-2"
@@ -59,6 +72,7 @@ const Popup: React.FC<PopupProps> = ({ categories, selectedCategories, onClose, 
       </div>
     </div>
   );
+  
 };
 
 export default Popup;

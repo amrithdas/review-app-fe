@@ -33,12 +33,15 @@ const Restaurant: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [sortBy, setSortBy] = useState<string>('recommended');
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     const navigate = useNavigate();
 
-    const fetchRestaurants = async (page: number, sortBy: string, lat: number = 0, lng: number = 0) => {
+    const fetchRestaurants = async (page: number, sortBy: string, selectedCategories: string[], lat: number = 0, lng: number = 0) => {
         try {
-            const response = await fetch(`${baseURL}restaurants/api/get-restaurants/?page=${page}&sort_by=${sortBy}&lat=${lat}&lng=${lng}`);
+            const category = selectedCategories.join(",");
+            console.log(category);
+            const response = await fetch(`${baseURL}restaurants/api/get-restaurants/?page=${page}&sort_by=${sortBy}&lat=${lat}&lng=${lng}&category=${category}`);
             const data = await response.json();
             setRestaurantData(data.restaurants);
             setTotalPages(data.total_pages);
@@ -66,14 +69,14 @@ const Restaurant: React.FC = () => {
     useEffect(() => {
         if (sortBy === 'nearest') {
             getUserLocation().then(({ latitude, longitude }) => {
-                fetchRestaurants(currentPage, sortBy, latitude, longitude);
+                fetchRestaurants(currentPage, sortBy, selectedCategories, latitude, longitude);
             }).catch((error) => {
                 console.error("Error getting user location:", error);
             });
         } else {
-            fetchRestaurants(currentPage, sortBy);
+            fetchRestaurants(currentPage, sortBy, selectedCategories);
         }
-    }, [currentPage, sortBy]);
+    }, [currentPage, sortBy, selectedCategories]);
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
@@ -91,6 +94,11 @@ const Restaurant: React.FC = () => {
         navigate(`/restaurant/${name}`);
     };
 
+    const handleCategoryChange = (categories: string[]) => {
+        setSelectedCategories(categories);
+        setCurrentPage(1);
+      };
+
     const center = {
         lat: 9.677964248783864,
         lng: 76.30516811712164,
@@ -101,7 +109,7 @@ const Restaurant: React.FC = () => {
             <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={true} />
             <div className="flex flex-col lg:flex-row gap-2 mb-6 mt-16">
                 <div className="lg:w-1/5 p-4 text-black">
-                    <RestaurantSideBar />
+                    <RestaurantSideBar onCategoryChange={handleCategoryChange} />
                 </div>
                 <div className="lg:w-3/5 p-4 text-black flex flex-col">
                     <div className="flex flex-col lg:flex-row justify-between items-center mb-4">

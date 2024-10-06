@@ -1,4 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ErrorMessageProps {
   message: string;
@@ -6,18 +10,45 @@ interface ErrorMessageProps {
 }
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message, onClose }) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 10000); // Adjust the time as needed
+  const [open, setOpen] = useState(false);
 
-    return () => clearTimeout(timer);
-  }, [onClose]);
+  useEffect(() => {
+    setOpen(true);
+  }, [message]);
+
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+    setTimeout(onClose, 1000);
+  };
 
   return (
-    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-md animate-fade-in-out z-50">
-      {message}
-    </div>
+    <Snackbar
+      open={open}
+      autoHideDuration={5000}
+      onClose={handleClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
+      <Alert
+        onClose={handleClose}
+        severity="error"
+        variant="filled"
+        action={
+          <IconButton
+            aria-label="close"
+            color="inherit"
+            size="small"
+            onClick={handleClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      >
+        {message}
+      </Alert>
+    </Snackbar>
   );
 };
 

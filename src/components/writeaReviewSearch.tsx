@@ -5,11 +5,12 @@ import { FaStar } from 'react-icons/fa';
 import Navbar from './navbar';
 import { useAuth } from '../modals/authContext';
 import LoginModalManager from '../modals/loginModalManager';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import ReviewCard from './reviewCard';
 import baseURL from '../config';
+import ErrorMessage from './errorPopup';
 
 const WriteaReviewSearch: React.FC = () => {
   const { handleSignupOpen, handleLoginOpen } = useAuth();
@@ -20,13 +21,26 @@ const WriteaReviewSearch: React.FC = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const restaurantName = queryParams.get('name') || 'Loading..';
   const csrfToken = Cookies.get('csrftoken');
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
+
+    if (!reviewText || reviewText.length < 80) {
+      setErrorMessage('Review must be at least 80 characters long and cannot be empty');
+      return;
+    }
+
+    if(rating<1){
+      setErrorMessage('Choose a rating');
+      return;
+    }
+
     try {
       const response = await axios.post(`${baseURL}restaurants/api/createrestaurantreviews/`, {
         restaurant_name: restaurantName,
@@ -40,6 +54,7 @@ const WriteaReviewSearch: React.FC = () => {
       });
 
       console.log('Review posted successfully:', response.data);
+      navigate(`/restaurant/${restaurantName}`)
     } catch (error) {
       console.error('Error posting review:', error);
     }
@@ -88,8 +103,9 @@ const WriteaReviewSearch: React.FC = () => {
               ))}
               <span className="ml-2">Select your rating</span>
             </div>
-            <p className="mb-4 md:mb-0">A few things to consider in your review</p>
+
           </div>
+          <p className="mb-4">A few things to consider in your review</p>
           <div className="flex space-x-2 mb-4">
             <span className="bg-gray-200 px-2 py-1 rounded">Food</span>
             <span className="bg-gray-200 px-2 py-1 rounded">Service</span>
@@ -157,6 +173,7 @@ const WriteaReviewSearch: React.FC = () => {
         </div>
       </div>
       <LoginModalManager />
+      {errorMessage && <ErrorMessage message={errorMessage} onClose={() => setError('')} />}
     </>
   );
 };

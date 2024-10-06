@@ -33,7 +33,7 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
     };
 
     const handleLogin = async (event: React.FormEvent) => {
-        event.preventDefault(); // Prevent the default form submission behavior
+        event.preventDefault();
 
         try {
 
@@ -154,7 +154,7 @@ const Login: React.FC<LoginProps> = ({ onClose, onSignupOpen }) => {
                         </div>
                     </form>
                 </div>
-                <a href='/' className='text-sm mt-4 text-center font-medium flex items-center justify-center text-cyan-500'>Login via email link</a>
+                {/* <a href='/' className='text-sm mt-4 text-center font-medium flex items-center justify-center text-cyan-500'>Login via email link</a> */}
                 <p className='text-sm mt-6 text-center font-medium flex items-center justify-center'>New to piktio? <span className='ml-2 text-cyan-500'><button onClick={handleSignupClick}>Sign up</button></span></p>
             </div>
         </div>

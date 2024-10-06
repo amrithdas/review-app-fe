@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import baseURL from "../config";
 import Popup from "./popUp";
-const RestaurantSideBar: React.FC = () => {
-    // const [priceRange, setPriceRange] = useState([0, 1000]);
-//   const [selectedCategories, setSelectedCategories] = useState([]);
+
+interface RestaurantSideBarProps {
+  onCategoryChange: (selectedCategories: string[]) => void;
+}
+
+const RestaurantSideBar: React.FC<RestaurantSideBarProps> = ({ onCategoryChange }) => {
+  // const [priceRange, setPriceRange] = useState([0, 1000]);
+  //   const [selectedCategories, setSelectedCategories] = useState([]);
   // const [distance, setDistance] = useState(0);
 
   const [categories, setCategories] = useState<string[]>([]);
@@ -25,26 +30,27 @@ const RestaurantSideBar: React.FC = () => {
   }, []);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
+    setSelectedCategories((prev) => {
+      const updatedCategories = prev.includes(category)
         ? prev.filter((item) => item !== category)
-        : [...prev, category]
-    );
+        : [...prev, category];
+      onCategoryChange(updatedCategories);
+      return updatedCategories;
+    });
   };
 
-  const openPopup = () => {
-    setIsPopupOpen(true);
+  const openPopup = () => setIsPopupOpen(true);
+  const handlePopupClose = () => setIsPopupOpen(false);
+  const handlePopupSave = (newSelectedCategories: string[]) => {
+    setSelectedCategories(newSelectedCategories);
+    onCategoryChange(newSelectedCategories);
+    setIsPopupOpen(false); // Close the popup after saving
   };
 
-  useState<string[]>([]);
-
-  const handlePopupClose = () => {
-    setIsPopupOpen(false);
-  };
-
-  const handlePopupSave = (selectedCategories: string[]) => {
-    setSelectedCategories(selectedCategories);
-  };
+  const combinedCategories = [
+    ...selectedCategories,
+    ...categories.filter((category) => !selectedCategories.includes(category)),
+  ].slice(0, 6);
 
   return (
     <div className="w-64 p-4 ">
@@ -75,22 +81,25 @@ const RestaurantSideBar: React.FC = () => {
       </div> */}
 
       <div className="mb-4">
-        <h3 className="font-medium mb-2">Categories</h3>
-        {categories.slice(0, 6).map((category) => (
-          <label key={category} className="flex items-center mb-1">
-            <input
-              type="checkbox"
-              checked={selectedCategories.includes(category)}
-              onChange={() => handleCategoryChange(category)}
-              className="mr-2"
-            />
-            {category}
-          </label>
-        ))}
+        <h3 className="font-medium font-bold mb-2">Categories</h3>
+        <div className="flex flex-wrap gap-2">
+          {combinedCategories.map((category) => (
+            <label
+              key={category}
+              className={`px-3 py-1 rounded-full border ${selectedCategories.includes(category)
+                ? 'bg-blue-100 text-blue-700 border-blue-400'
+                : 'bg-white text-gray-600 border-gray-400'
+                } cursor-pointer`}
+              onClick={() => handleCategoryChange(category)}
+            >
+              {category}
+            </label>
+          ))}
+        </div>
         {categories.length > 6 && (
-          <button 
+          <button
             onClick={openPopup}
-            className="text-blue-500 underline mt-2"
+            className="text-blue-500 font-bold hover:underline mt-2"
           >
             See All
           </button>
@@ -112,7 +121,7 @@ const RestaurantSideBar: React.FC = () => {
         </div>
       </div> */}
       {isPopupOpen && (
-        <Popup 
+        <Popup
           categories={categories}
           selectedCategories={selectedCategories}
           onClose={handlePopupClose}

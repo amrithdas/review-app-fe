@@ -16,8 +16,6 @@ interface RestaurantData {
     description: string;
     contact_info: string;
     tags: string[];
-    cafe: boolean;
-    bakery: boolean;
     website: string;
     location: string;
     reviews: number;

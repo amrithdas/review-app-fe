@@ -10,7 +10,7 @@ import ReviewPage from "./reviewPage";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./navbar";
 import { useAuth } from "../modals/authContext";
-import UserAuth from "../hooks/userAuth"
+import UserAuth from "../hooks/userAuth";
 import LoginModalManager from "../modals/loginModalManager";
 import Footer from "./footer";
 import ErrorMessage from "./errorPopup";
@@ -18,7 +18,7 @@ import axios from "axios";
 import baseURL from "../config";
 
 interface RestaurantData {
-    id: number; // Assuming you have an ID for each restaurant
+    id: number;
     name: string;
     address: string;
     description: string;
@@ -47,7 +47,7 @@ const RestaurantReview: React.FC = () => {
             navigate(`/restaurants/review?name=${name}`);
         } else {
             setError(true);
-            handleLoginOpen(); // Open login modal if user is not logged in
+            handleLoginOpen();
         }
     };
 
@@ -70,7 +70,6 @@ const RestaurantReview: React.FC = () => {
 
     const getWebsiteUrl = (url?: string) => {
         if (!url) return "/";
-        // Check if URL starts with "http://" or "https://"
         return /^https?:\/\//i.test(url) ? url : `http://${url}`;
     };
 
@@ -81,77 +80,83 @@ const RestaurantReview: React.FC = () => {
 
     return (
         <>
-        <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={false} />
-            <RestaurantCarousel opening_time={restaurantData?.opening_time} closing_time={restaurantData?.closing_time} name={restaurantData?.name} ratingStr={restaurantData?.rating} image_urls={restaurantData?.image_urls} reviewCount={reviewCount} />
-            <div className="m-48 my-4 m-36 flex row gap-10">
-                <div className=" w-3/5	">
-
-                    <div className="flex row gap-4 my-4 ">
+            <Navbar onSignupClick={handleSignupOpen} onLoginClick={handleLoginOpen} isFixed={false} />
+            <RestaurantCarousel 
+                opening_time={restaurantData?.opening_time} 
+                closing_time={restaurantData?.closing_time} 
+                name={restaurantData?.name} 
+                ratingStr={restaurantData?.rating} 
+                image_urls={restaurantData?.image_urls} 
+                reviewCount={reviewCount} 
+            />
+            <div className="m-4 sm:m-8 lg:m-36 flex flex-col lg:flex-row gap-4">
+                {/* Left section - Main content */}
+                <div className="w-full lg:w-3/5 flex flex-col gap-4">
+                    <div className="flex flex-row gap-2">
                         <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={handleWriteReviewClick}>Write a review</button>
                         {/* <button className=" text-black px-4 py-2 rounded border border-solid border-black">Add photo</button> */}
                         {/* <button className=" text-black px-4 py-2 rounded border border-solid border-black">Share</button> */}
                         {/* <button className=" text-black px-4 py-2 rounded border border-solid border-black">Save</button> */}
                     </div>
-                    <br></br>
                     <hr />
-                        <main className="p-4">
-                            <LocationHours location={restaurantData?.location} openingTime={restaurantData?.opening_time} closingTime={restaurantData?.closing_time} address={restaurantData?.address} />
-                        </main>
-                        <div>
-                            <ReviewPage name={restaurantData?.name} reviewCount={reviewCount} ratingStr={restaurantData?.rating}/>
-                        </div>
+                    <main className="p-4">
+                        <LocationHours 
+                            location={restaurantData?.location} 
+                            openingTime={restaurantData?.opening_time} 
+                            closingTime={restaurantData?.closing_time} 
+                            address={restaurantData?.address} 
+                        />
+                    </main>
+                    <ReviewPage 
+                        name={restaurantData?.name} 
+                        reviewCount={reviewCount} 
+                        ratingStr={restaurantData?.rating} 
+                    />
                 </div>
-                {/* ////////////////////////////Right section /////////////////////////////////////// */}
-                <div className=" w-2/5 flex flex-col gap-2 mt-4">
-
-                    {/* <div className="   p-4  border rounded-lg">
-                        <b className=" row flex gap-2 mb-2"><TbHandFinger style={{ fontSize: 32 }} />
+                
+                {/* Right section - Info and links */}
+                <div className="w-full lg:w-2/5 flex flex-col gap-2 mt-4 lg:mt-0">
+                    {/* <div className="p-4 border rounded-lg">
+                        <b className="flex gap-2 mb-2"><TbHandFinger style={{ fontSize: 32 }} />
                             This Way to Our Legendary Crispy, Curly Pepperoni</b>
-                        <button className="bg-red-600 text-white py-2 px-8 rounded-lg mb-4 w-full ">Order Now</button>
+                        <button className="bg-red-600 text-white py-2 px-8 rounded-lg mb-4 w-full">Order Now</button>
                     </div> */}
-                    <div className="  p-4 flex flex-col gap-2 border rounded-lg">
+                    <div className="p-4 flex flex-col gap-2 border rounded-lg">
                         <a
-                          href={getWebsiteUrl(restaurantData?.website)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-500 mb-4 justify-between flex flex-row items-center"
+                            href={getWebsiteUrl(restaurantData?.website)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 justify-between flex items-center mb-4"
                         >
-                          {restaurantData?.website || "No website available"}
-                          <RiShareBoxLine style={{ color: "black", fontSize: 24 }} />
+                            {restaurantData?.website || "No website available"}
+                            <RiShareBoxLine style={{ color: "black", fontSize: 24 }} />
                         </a>
                         <hr />
-                        <p className="text-gray-700 mt-2 justify-between flex flex-row items-center ">{restaurantData?.contact_info} <LuPhoneCall style={{ color: "black", fontSize: 24 }} />
+                        <p className="text-gray-700 flex justify-between items-center">
+                            {restaurantData?.contact_info} <LuPhoneCall style={{ color: "black", fontSize: 24 }} />
                         </p>
                         <hr />
-                        <div className="flex flex-row items-center justify-between">
-                            <div>
-                                <a
-                                  href={getGoogleMapsUrl(restaurantData?.location || "")}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-blue-500 mt-2"
-                                >
-                                  Get Directions
-                                </a>
-                                <p className="text-gray-700  justify-between	flex flex-row items-center ">{restaurantData?.address}</p>
-                            </div>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                            <a
+                                href={getGoogleMapsUrl(restaurantData?.location || "")}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 mt-2"
+                            >
+                                Get Directions
+                            </a>
+                            <p className="text-gray-700">{restaurantData?.address}</p>
                             <LiaDirectionsSolid style={{ color: "black", fontSize: 28 }} />
                         </div>
-                        {/* <hr />
-                        <button className="border border-solid border-black py-2 px-4 rounded-lg mt-4 w-full justify-center flex flex-row items-center gap-2"><FaPencilAlt />
-                            Suggest an edit</button> */}
                     </div>
                 </div>
-
-
             </div>
 
             <Footer />
             <LoginModalManager />
             {error && <ErrorMessage message="Please Login to continue" onClose={() => setError(false)} />}
         </>
-
-    )
+    );
 };
 
-export default RestaurantReview
+export default RestaurantReview;

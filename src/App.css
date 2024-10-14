@@ -48,3 +48,9 @@
 .animate-fade-in-out {
   animation: fadeInOut 3s ease-in-out;
 }
+
+/* Show category first on mobile */
+.mobile-order {
+  display: flex;
+  flex-direction: column;
+}
